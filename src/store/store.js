@@ -17,8 +17,17 @@ const store = new Vuex.Store({
     users
   },
   state: {
+    alert: {
+      type: 'success',
+      message: ''
+    },
     loading: false,
     error: ''
+  },
+  actions: {
+    setAlert({commit}, payload){
+      commit('setAlert', payload)
+    }
   },
   mutations: {
     setError (state, payload) {
@@ -26,6 +35,12 @@ const store = new Vuex.Store({
     },
     setLoading(state, loading) {
       state.loading = loading
+    },
+    setAlert(state, payload) {
+      state.alert = {
+        type: payload.type || 'success',
+        message: payload.message
+      }
     }
   },
   getters: {
@@ -34,6 +49,9 @@ const store = new Vuex.Store({
     },
     loading(state) {
       return state.loading
+    },
+    alert(state) {
+      return state.alert
     }
   }
 })

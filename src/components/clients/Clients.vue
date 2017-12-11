@@ -42,6 +42,6 @@
 
 </template>
 
-<script src="./clients">
+<script src="./clientsScript">
 
 </script>

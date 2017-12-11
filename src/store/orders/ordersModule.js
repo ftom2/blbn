@@ -3,16 +3,39 @@
 import { database } from 'firebase'
 
 const state = {
-  selectedOrder: {}
+  orders: []
 }
 
 const mutations = {
-  setOrderToPrint(state, payload){
-    state.selectedOrder = payload
+  setOrders (state,payload){
+    if (payload){
+      let arr = Object.keys(payload).map((k) => {
+        payload[k].id = k
+        return payload[k]
+      })
+      state.orders = arr
+    }
   }
 }
 
 const actions = {
+  loadOrders({commit}) {
+    commit('setLoading', true)
+    const db = database()
+    const ordersRef = db.ref('orders')
+    ordersRef.on('value', snapshot => {
+      commit('setLoading', false)
+      commit('setOrders', snapshot.val())
+    })
+  },
+  getOrderById({commit}, payload){
+    commit('setLoading', true)
+    const db = database()
+    const ordersRef = db.ref(`orders/${payload}`)
+    return ordersRef.once('value', () => {
+      commit('setLoading', false)
+    })
+  },
   createOrder({commit}, payload) {
     commit('setLoading', true)
     const data ={
@@ -27,7 +50,28 @@ const actions = {
     const orderRef = database().ref('orders').push(data)
     return orderRef.then(() => {
       commit('setLoading', false)
+      commit('setAlert', {message: 'Order saved'})
       return orderRef.key;
+    }).catch(err => {
+      console.error('err', err)
+      this.$Message.error(err.message)
+    })
+  },
+  updateOrder({commit}, {data,id}) {
+    commit('setLoading', true)
+    let obj = {}
+    obj['orders/' + id] = {
+      client: {
+        name: data.name,
+        order: data.order,
+        createdAt: database.ServerValue.TIMESTAMP,
+        updatedAt: database.ServerValue.TIMESTAMP
+      }
+    }
+
+    database().ref().update(obj).then(() => {
+      commit('setLoading', false)
+      commit('setAlert', {message: 'Order updated'})
     }).catch(err => {
       console.error('err', err)
       this.$Message.error(err.message)
@@ -39,14 +83,15 @@ const actions = {
     const ordersRef = db.ref(`orders/${payload}`)
     ordersRef.once('value', snapshot => {
       commit('setLoading', false)
-      commit('setOrderToPrint', snapshot.val())
+      console.log('snapshot', snapshot);
+
     })
   }
 }
 
 const getters = {
-  selectedOrder(state){
-    return state.selectedOrder
+  orders(state){
+    return state.orders
   }
 }
 

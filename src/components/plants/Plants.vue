@@ -45,7 +45,7 @@
 
 </template>
 
-<script src="./plants">
+<script src="./plantsScript">
 
 </script>
 

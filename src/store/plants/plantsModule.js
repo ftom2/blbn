@@ -42,6 +42,7 @@ const actions = {
 
     database().ref().update(data).then(() => {
       commit('setLoading', false)
+      commit('setAlert', {message: 'Plant updated'})
     }).catch(err => {
       console.error('err', err)
       this.$Message.error(err.message)
@@ -61,6 +62,7 @@ const actions = {
 
     database().ref('plants').push().set(data).then(() => {
       commit('setLoading', false)
+      commit('setAlert', {message: 'Plant created'})
     }).catch(err => {
       console.error('err', err)
       this.$Message.error(err.message)
@@ -70,6 +72,7 @@ const actions = {
     commit('setLoading', true)
     return database().ref('plants/' + payload).remove().then(() => {
       commit('setLoading', false)
+      commit('setAlert', {message: 'Plant deleted'})
     }).catch(err => {
       console.error('err', err)
       this.$Message.error(err.message)

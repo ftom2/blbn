@@ -8,7 +8,6 @@ export default {
       deleteMode: false,
       editMode: false,
       filter: '',
-      pagination: {},
       headers: [{
           align: 'left',
           value: 'plantNameEng',

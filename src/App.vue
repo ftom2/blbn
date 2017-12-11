@@ -1,6 +1,12 @@
 <template>
   <v-app>
-    <vue-toastr ref="toastr"></vue-toastr>
+    <v-alert :color="alert.type"
+    v-show="alert.message"
+    value="true"
+    transition="scale-transition"
+    class="app-alert">
+      {{alert.message}}
+    </v-alert>
     <div class="loading-icon" v-show="loading">
       <v-progress-circular indeterminate v-bind:size="70" v-bind:width="7" color="green"></v-progress-circular>
     </div>
@@ -26,6 +32,17 @@
   export default {
     name: 'app',
     computed: {
+      alert(){
+        const alert = this.$store.getters.alert
+
+        if (alert.message){
+          setTimeout(() => {
+            this.$store.dispatch('setAlert', {message: null})
+          },2000)
+        }
+
+        return alert
+      },
       userIsAuthenticated() {
         return !!this.$store.getters.user
       },
@@ -34,16 +51,16 @@
       },
       menuItems() {
         let items = [{
-            to: 'plants',
+            to: '/plants',
             label: 'צמחים',
             icon: 'leaf'
           }, {
-            to: 'clients',
+            to: '/clients',
             label: 'לקוחות',
             icon: 'ios-people'
           },
           {
-            to: 'orders',
+            to: '/orders',
             label: 'הזמנות',
             icon: 'ios-list-outline'
           }
@@ -104,5 +121,15 @@
 
   .print-show{
     display: none;
+  }
+
+  .app-alert{
+    position: fixed !important;
+    right: 20px;
+    bottom: 100px;
+    z-index: 1000;
+    margin: 0 !important;
+    min-width: 200px;
+    border-radius: 5px;
   }
 </style>

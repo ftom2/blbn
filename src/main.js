@@ -6,14 +6,14 @@ import router from './router'
 import {initializeApp, auth} from 'firebase'
 import store from '@/store/store'
 import Vuetify from 'vuetify'
-import Toastr from 'vue-toastr'
+import VueMoment from 'vue-moment'
 import('vuetify/dist/vuetify.min.css')
 
 Vue.use(Vuetify)
+Vue.use(VueMoment);
 
 Vue.config.productionTip = false
 
-Vue.component('vue-toastr',Toastr);
 
 /* eslint-disable no-new */
 new Vue({

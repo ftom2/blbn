@@ -1,7 +1,14 @@
 export default {
-  name: 'bl-order',
+  name: 'blNewOrder',
+  props: {
+    id: {
+      required: true,
+      type: String
+    }
+  },
   data: function() {
     return {
+      orderId: '',
       isChanged: false,
       selectedClientName: '',
       client: {
@@ -22,6 +29,15 @@ export default {
     }
     if (!this.plants.length){
       this.$store.dispatch('loadPlants')
+    }
+
+    if (this.id !== 'new'){
+      this.$store.dispatch('getOrderById', this.id).then(response => {
+        if (response.val()){
+          this.client = response.val().client
+          this.orderId = this.id
+        }
+      })
     }
   },
   watch: {
@@ -75,9 +91,18 @@ export default {
       })
     },
     save() {
-      this.$store.dispatch('createOrder', this.client).then(() => {
-        this.isChanged = false
-      })
+      if (!this.orderId){
+        this.$store.dispatch('createOrder', this.client).then((response) => {
+          this.isChanged = false
+          this.orderId = response
+        })
+      }
+      //update mode
+      else{
+        this.$store.dispatch('updateOrder', {data: this.client, id: this.orderId}).then(() => {
+          this.isChanged = false
+        })
+      }
     },
     print(){
       window.print()

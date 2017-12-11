@@ -3,6 +3,9 @@ import Router from 'vue-router'
 import Plants from '@/components/plants/Plants'
 import Clients from '@/components/clients/Clients'
 import Orders from '@/components/orders/Orders'
+import NewOrder from '@/components/orders/New'
+// import EditOrder from '@/components/orders/Edit'
+import OrdersList from '@/components/orders/OrdersList'
 import Login from '@/components/Login'
 import NotFound from '@/components/NotFound'
 import Auth from './auth-guard'
@@ -18,8 +21,7 @@ export default new Router({
     },
     {
       path: '/',
-      component: Orders,
-      beforeEnter: Auth
+      redirect: {name: 'ordersList'}
     },
     {
       path: '/plants',
@@ -37,7 +39,22 @@ export default new Router({
       path: '/orders',
       name: 'orders',
       component: Orders,
-      beforeEnter: Auth
+      beforeEnter: Auth,
+      children: [
+        { path: '', component: OrdersList, name: 'ordersList' },
+        {
+          path: ':id',
+          name: 'editOrder',
+          component: NewOrder,
+          props: true
+        }
+        // {
+        //   path: ':id',
+        //   name: 'editOrder',
+        //   component: EditOrder,
+        //   props: true
+        // }
+      ]
     },
     {
       path: '*',
