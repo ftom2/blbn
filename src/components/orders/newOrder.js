@@ -116,6 +116,7 @@ export default {
         ok = true
       }
       if (ok){
+        this.orderId = ''
         this.isChanged = false
         this.client = {
           name: '',

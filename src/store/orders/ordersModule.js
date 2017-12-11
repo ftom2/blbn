@@ -15,6 +15,9 @@ const mutations = {
       })
       state.orders = arr
     }
+    else{
+      state.orders = []
+    }
   }
 }
 
@@ -24,6 +27,8 @@ const actions = {
     const db = database()
     const ordersRef = db.ref('orders')
     ordersRef.on('value', snapshot => {
+      console.log('order updated', snapshot.val() );
+
       commit('setLoading', false)
       commit('setOrders', snapshot.val())
     })
@@ -85,6 +90,16 @@ const actions = {
       commit('setLoading', false)
       console.log('snapshot', snapshot);
 
+    })
+  },
+  deleteOrder({commit}, payload) {
+    commit('setLoading', true)
+    return database().ref(`orders/${payload}`).remove().then(() => {
+      commit('setLoading', false)
+      commit('setAlert', {message: 'Order deleted'})
+    }).catch(err => {
+      console.error('err', err)
+      this.$Message.error(err.message)
     })
   }
 }
