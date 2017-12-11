@@ -36,6 +36,7 @@ export default {
         if (response.val()){
           this.client = response.val().client
           this.orderId = this.id
+          this.onClientSelected(this.client.name)
         }
       })
     }
@@ -129,7 +130,6 @@ export default {
           }]
         }
       }
-
     },
     remove(removed) {
       this.client.order = this.client.order.filter(item => item !== removed)
