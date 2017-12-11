@@ -3,17 +3,17 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
-import * as fb from 'firebase'
-import iView from 'iview'
-import 'iview/dist/styles/iview.css'
-import RotateLoader from 'vue-spinner/src/RotateLoader.vue'
+import {initializeApp, auth} from 'firebase'
 import store from '@/store/store'
+import Vuetify from 'vuetify'
+import Toastr from 'vue-toastr'
+import('vuetify/dist/vuetify.min.css')
+
+Vue.use(Vuetify)
 
 Vue.config.productionTip = false
 
-Vue.use(iView)
-
-Vue.component('bl-loader', RotateLoader)
+Vue.component('vue-toastr',Toastr);
 
 /* eslint-disable no-new */
 new Vue({
@@ -32,10 +32,13 @@ new Vue({
       messagingSenderId: '230607839888'
     }
 
-    fb.initializeApp(config)
-    fb.auth().onAuthStateChanged((user) => {
+    initializeApp(config)
+    auth().onAuthStateChanged((user) => {
       if (user) {
         this.$store.dispatch('autoSignin', user)
+      }
+      else{
+        this.$store.dispatch('setUser', null)
       }
     })
   }

@@ -2,16 +2,18 @@
 
 module.exports = {
   root: true,
-  parser: 'babel-eslint',
   parserOptions: {
+    parser: 'babel-eslint',
     sourceType: 'module'
   },
   env: {
     browser: true,
     "es6": true
   },
-  // https://github.com/standard/standard/blob/master/docs/RULES-en.md
-  extends: 'standard',
+  extends: [
+    'eslint:recommended',
+    'plugin:vue/recommended' // or 'plugin:vue/base'
+  ],
   // required to lint *.vue files
   plugins: [
     'html'
@@ -31,6 +33,7 @@ module.exports = {
     "no-undef": "warn",
     "constructor-super": "warn",
     "valid-typeof": "warn",
-    'indent': 0
+    'indent': 0,
+    'no-console': 1
   }
 }

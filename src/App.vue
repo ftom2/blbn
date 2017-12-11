@@ -1,24 +1,25 @@
 <template>
-  <div id="app">
-    <Menu mode="horizontal" theme="primary" active-name="clients" v-if="userIsAuthenticated">
-      <MenuItem name="logo">
-      <router-link to="plants" tag="span">Balaban</router-link>
-      </MenuItem>
-      <Row type="flex" justify="end">
-        <MenuItem :name="item.name" v-for="item in menuItems" :key="item.name">
-        <router-link :to="item.name" tag="span">{{item.label}}</router-link>
-        <Icon :type="item.icon" style="margin-left: 5px"></Icon>
-        </MenuItem>
-        <MenuItem name="logout">
-        <span @click="logout">התנתק</span>
-        <Icon type="log-out" style="margin-left: 5px"></Icon>
-        </MenuItem>
-      </Row>
-    </Menu>
-    <div class="container-fluid">
-      <router-view/>
+  <v-app>
+    <vue-toastr ref="toastr"></vue-toastr>
+    <div class="loading-icon" v-show="loading">
+      <v-progress-circular indeterminate v-bind:size="70" v-bind:width="7" color="green"></v-progress-circular>
     </div>
-  </div>
+    <!-- <v-navigation-drawer app></v-navigation-drawer> -->
+    <v-toolbar app color="green" dark v-if="userIsAuthenticated" class="print-hide">
+      <v-toolbar-title>Balaban</v-toolbar-title>
+      <v-spacer></v-spacer>
+      <v-toolbar-side-icon class="hidden-md-and-up"></v-toolbar-side-icon>
+      <v-toolbar-items class="hidden-sm-and-down" v-for="item in menuItems" :key="item.to">
+        <v-btn flat :to="item.to">{{item.label}}</v-btn>
+      </v-toolbar-items>
+    </v-toolbar>
+    <v-content fluid>
+      <v-container fluid fill-height>
+        <router-view></router-view>
+      </v-container>
+    </v-content>
+    <v-footer app></v-footer>
+  </v-app>
 </template>
 
 <script>
@@ -28,19 +29,31 @@
       userIsAuthenticated() {
         return !!this.$store.getters.user
       },
+      loading() {
+        return this.$store.getters.loading
+      },
       menuItems() {
-          let items = [{
-            name: 'plants',
+        let items = [{
+            to: 'plants',
             label: 'צמחים',
             icon: 'leaf'
           }, {
-            name: 'clients',
+            to: 'clients',
             label: 'לקוחות',
             icon: 'ios-people'
-          }]
+          },
+          {
+            to: 'orders',
+            label: 'הזמנות',
+            icon: 'ios-list-outline'
+          }
+        ]
         return items
       }
     },
+    // mounted() {
+    //   this.$refs.toastr.s("SUCCESS MESSAGE");
+    // },
     methods: {
       logout() {
         this.$store.dispatch('logout')
@@ -53,7 +66,7 @@
 <style lang="scss">
   html,
   body {
-    overflow: hidden;
+    overflow: hidden !important;
     height: 100vh;
     font-size: 10px;
   }
@@ -74,25 +87,22 @@
       border-radius: 5px;
     }
   }
-  .v-spinner {
+  .loading-icon {
     position: fixed;
-    left: 50%;
-    top: 50%;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, .5);
+    .progress-circular {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+    }
   }
-  .table-wrapper {
-    height: calc(100vh - 100px);
-    overflow: auto;
-  }
-  .mb10 {
-    margin-bottom: 10px;
-  }
-  .m10 {
-    margin: 10px;
-  }
-  .center {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
+
+  .print-show{
+    display: none;
   }
 </style>

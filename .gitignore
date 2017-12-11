@@ -12,3 +12,4 @@ yarn-error.log*
 *.ntvs*
 *.njsproj
 *.sln
+balaban.code-workspace

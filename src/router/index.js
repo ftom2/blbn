@@ -2,7 +2,9 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Plants from '@/components/Plants'
 import Clients from '@/components/Clients'
+import Orders from '@/components/Orders'
 import Login from '@/components/Login'
+import NotFound from '@/components/NotFound'
 import Auth from './auth-guard'
 
 Vue.use(Router)
@@ -16,7 +18,8 @@ export default new Router({
     },
     {
       path: '/',
-      component: Clients
+      component: Orders,
+      beforeEnter: Auth
     },
     {
       path: '/plants',
@@ -31,8 +34,14 @@ export default new Router({
       beforeEnter: Auth
     },
     {
+      path: '/orders',
+      name: 'orders',
+      component: Orders,
+      beforeEnter: Auth
+    },
+    {
       path: '*',
-      component: Clients
+      component: NotFound
     }
   ]
 })

@@ -1,0 +1,22 @@
+@media print{
+  .print-hide{
+    display: none !important;
+  }
+
+  .print-show{
+    display: initial !important;
+  }
+}
+@page {
+  size: A4;
+}
+
+@page :left {
+  margin-left: 0cm;
+}
+
+@page :right {
+  margin-right: 0cm;
+}
+
+
