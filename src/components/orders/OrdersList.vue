@@ -8,13 +8,16 @@
           <v-icon>create_new_folder</v-icon>
           &nbsp;New Order</v-btn>
       </v-card-title>
-      <v-data-table :items="orders" :headers="headers">
+      <v-data-table :items="orders" :headers="headers" must-sort>
         <template slot="items" slot-scope="props">
               <td class="text-xs-left print-hide">
                 <span>{{props.item.name}}</span>
               </td>
               <td class="text-xs-left">
                 <span>{{props.item.createdAt | moment("DD/MM/YY hh:mm")}}</span>
+              </td>
+              <td class="text-xs-left">
+                <span>{{props.item.orderDate | moment("DD/MM/YY")}}</span>
               </td>
               <td class="text-xs-right">
                 <v-btn fab small dark color="green" :to="{name: 'editOrder', params: {id: props.item.id}}">
@@ -50,8 +53,13 @@ export default {
         },
         {
           align: 'left',
-          value: 'Created At',
+          value: 'createdAt',
           text: 'תאריך יצירת ההזמנה'
+        },
+         {
+          align: 'left',
+          value: 'orderDate',
+          text: 'תאריך משלוח'
         },
         {
           sortable: false,
@@ -67,6 +75,7 @@ export default {
           return {
             name: item.client.name,
             createdAt: new Date(item.client.createdAt),
+            orderDate: item.client.orderDate,
             id: item.id
           }
         })

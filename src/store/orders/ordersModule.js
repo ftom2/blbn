@@ -27,8 +27,6 @@ const actions = {
     const db = database()
     const ordersRef = db.ref('orders')
     ordersRef.on('value', snapshot => {
-      console.log('order updated', snapshot.val() );
-
       commit('setLoading', false)
       commit('setOrders', snapshot.val())
     })
@@ -47,6 +45,7 @@ const actions = {
       client: {
         name: payload.name,
         order: payload.order,
+        orderDate: payload.orderDate,
         createdAt: database.ServerValue.TIMESTAMP,
         updatedAt: database.ServerValue.TIMESTAMP
       }
@@ -69,6 +68,7 @@ const actions = {
       client: {
         name: data.name,
         order: data.order,
+        orderDate: data.orderDate,
         createdAt: database.ServerValue.TIMESTAMP,
         updatedAt: database.ServerValue.TIMESTAMP
       }
@@ -80,16 +80,6 @@ const actions = {
     }).catch(err => {
       console.error('err', err)
       this.$Message.error(err.message)
-    })
-  },
-  getOrder({commit}, payload){
-    commit('setLoading', true)
-    const db = database()
-    const ordersRef = db.ref(`orders/${payload}`)
-    ordersRef.once('value', snapshot => {
-      commit('setLoading', false)
-      console.log('snapshot', snapshot);
-
     })
   },
   deleteOrder({commit}, payload) {

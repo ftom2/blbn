@@ -1,3 +1,4 @@
+import moment from 'moment'
 export default {
   name: 'blNewOrder',
   props: {
@@ -8,10 +9,13 @@ export default {
   },
   data: function() {
     return {
+      dateFormatted:null,
+      showPicker: false,
       orderId: '',
       isChanged: false,
       selectedClientName: '',
       client: {
+        orderDate: '',
         name: '',
         order: [{
           hebName: '',
@@ -67,9 +71,18 @@ export default {
     }
   },
   methods: {
+    formatDate(date){
+      if (!date) {
+        return null
+      }
+
+      const [year, month, day] = date.split('-')
+      return `${day}/${month}/${year}`
+    },
     onClientSelected(val){
       const client = this.clients.find(item => item.hebName === val)
       this.selectedClientName = client.engName
+      this.dateFormatted = this.formatDate(this.client.orderDate)
     },
     onHebNameSelected(selected) {
       const plant = this.plants.find(item => item.plantNameHeb === selected.hebName)

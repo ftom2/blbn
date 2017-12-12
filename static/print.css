@@ -6,6 +6,11 @@
   .print-show{
     display: initial !important;
   }
+
+  .title{
+    position: relative !important;
+    z-index: 1 !important;
+  }
 }
 @page {
   size: A4;
