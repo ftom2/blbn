@@ -4,14 +4,6 @@
 
 <script>
 export default {
-  name: 'blOrders',
-  data: function() {	
-    return {}
-  },
-  methods: {}
+  name: 'blOrders'
 }
 </script>
-
-<style scoped>
-
-</style>

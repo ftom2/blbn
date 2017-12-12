@@ -37,7 +37,6 @@ export default new Router({
     },
     {
       path: '/orders',
-      name: 'orders',
       component: Orders,
       beforeEnter: Auth,
       children: [

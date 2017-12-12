@@ -17,7 +17,7 @@
                 <span>{{props.item.createdAt | moment("DD/MM/YY hh:mm")}}</span>
               </td>
               <td class="text-xs-left">
-                <span>{{props.item.orderDate | moment("DD/MM/YY")}}</span>
+                <span v-if="props.item.orderDate">{{new Date(props.item.orderDate) | moment("DD/MM/YY")}}</span>
               </td>
               <td class="text-xs-right">
                 <v-btn fab small dark color="green" :to="{name: 'editOrder', params: {id: props.item.id}}">
