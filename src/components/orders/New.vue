@@ -1,7 +1,7 @@
 <template>
 <v-layout row class="scroll-y" style="height: calc(100vh - 100px)">
   <v-flex xs12>
-    <h2 class="title">{{selectedClientName}} - {{dateFormatted}}</h2>
+    <h3 class="title">{{client.name}}({{selectedClientName}}) - {{dateFormatted}}</h3>
     <v-card full-width flat>
       <v-card-title class="print-hide">
         <v-btn dark color="primary" @click.native="add">
@@ -41,12 +41,14 @@
       </v-card-title>
       <v-data-table hide-headers hide-actions :items="client.order">
 <template slot="items" slot-scope="props">
-<td class="text-xs-left print-show">
+<td class="text-xs-left">
   <v-text-field label="כמות" v-model="props.item.quantity" class="print-hide"></v-text-field>
   <span class="print-show">{{props.item.quantity}}</span>
 </td>
-<td class="text-xs-left print-hide">
-  <v-select :items="hebPlants" v-model="props.item.hebName" label="שם הצמח בעברית" autocomplete @input="onHebNameSelected(props.item)"></v-select>
+<td class="text-xs-left">
+  <v-select :items="hebPlants" v-model="props.item.hebName" label="שם הצמח בעברית" autocomplete @input="onHebNameSelected(props.item)" class="print-hide">
+  </v-select>
+  <span class="print-show">{{props.item.hebName}}</span>
 </td>
 <td class="text-xs-left">
   <v-select :items="engPlants" v-model="props.item.engName" label="שם הצמח באנגלית" autocomplete @input="onEngNameSelected(props.item)" class="print-hide"></v-select>
@@ -59,9 +61,8 @@
   <v-text-field label="גודל" v-model="props.item.size" class="print-hide"></v-text-field>
   <span class="print-show">{{props.item.size}}</span>
 </td>
-<td class="text-xs-left">
-  <v-text-field label="כמות" v-model="props.item.quantity" class="print-hide"></v-text-field>
-  <span class="print-show">{{props.item.quantity}}</span>
+<td class="print-show text-xs-left">
+  <span>{{props.item.quantity}}</span>
 </td>
 <td class="text-xs-right print-hide">
   <v-btn fab dark small color="red" @click.native.stop="remove(props.item)">
@@ -77,7 +78,6 @@
 </template>
 
 <script src="./newOrder">
-
 </script>
 
 <style scoped>
