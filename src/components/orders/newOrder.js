@@ -105,8 +105,9 @@ export default {
     },
     print() {
       //set body height
-      const body = document.body;
-      body.style.height = body.scrollHeight + 'px';
+      const el = document.getElementById('scrollTarget'),
+        body = document.body;
+      body.style.height = el.scrollHeight + 'px';
       console.log('height', body.style.height);
 
       window.print();
