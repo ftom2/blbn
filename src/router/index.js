@@ -1,16 +1,16 @@
-import Vue from 'vue'
-import Router from 'vue-router'
-import Plants from '@/components/plants/Plants'
-import Clients from '@/components/clients/Clients'
-import Orders from '@/components/orders/Orders'
-import NewOrder from '@/components/orders/New'
-// import EditOrder from '@/components/orders/Edit'
-import OrdersList from '@/components/orders/OrdersList'
-import Login from '@/components/Login'
-import NotFound from '@/components/NotFound'
-import Auth from './auth-guard'
+import Vue from 'vue';
+import Router from 'vue-router';
+const Plants = () => import('@/components/plants/Plants');
+const Clients = () => import('@/components/clients/Clients');
+const Orders = () => import('@/components/orders/Orders');
+const NewOrder = () => import('@/components/orders/NewList');
+const OrdersList = () => import('@/components/orders/OrdersList');
 
-Vue.use(Router)
+import Login from '@/components/Login';
+import NotFound from '@/components/NotFound';
+import Auth from './auth-guard';
+
+Vue.use(Router);
 
 export default new Router({
   routes: [
@@ -21,7 +21,7 @@ export default new Router({
     },
     {
       path: '/',
-      redirect: {name: 'ordersList'}
+      redirect: { name: 'ordersList' }
     },
     {
       path: '/plants',
@@ -47,12 +47,6 @@ export default new Router({
           component: NewOrder,
           props: true
         }
-        // {
-        //   path: ':id',
-        //   name: 'editOrder',
-        //   component: EditOrder,
-        //   props: true
-        // }
       ]
     },
     {
@@ -60,4 +54,4 @@ export default new Router({
       component: NotFound
     }
   ]
-})
+});

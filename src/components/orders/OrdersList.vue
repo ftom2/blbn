@@ -8,26 +8,26 @@
           <v-icon>create_new_folder</v-icon>
           &nbsp;New Order</v-btn>
       </v-card-title>
-      <v-data-table :items="orders" :headers="headers" must-sort>
-        <template slot="items" slot-scope="props">
-              <td class="text-xs-left print-hide">
-                <span>{{props.item.name}}</span>
-              </td>
-              <td class="text-xs-left">
-                <span>{{props.item.createdAt | moment("DD/MM/YY hh:mm")}}</span>
-              </td>
-              <td class="text-xs-left">
-                <span v-if="props.item.orderDate">{{new Date(props.item.orderDate) | moment("DD/MM/YY")}}</span>
-              </td>
-              <td class="text-xs-right">
-                <v-btn fab small dark color="green" :to="{name: 'editOrder', params: {id: props.item.id}}">
-                  <v-icon dark>edit</v-icon>
-                </v-btn>
-                <v-btn fab dark small color="red"  @click.native.stop="confirmDelete(props.item.id)">
-                    <v-icon dark>delete</v-icon>
-                </v-btn>
-              </td>
-</template>
+        <v-data-table :items="orders" :headers="headers" must-sort>
+          <template slot="items" slot-scope="props">
+                <td class="text-xs-left print-hide">
+                  <span>{{props.item.name}}</span>
+                </td>
+                <td class="text-xs-left">
+                  <span>{{props.item.createdAt | moment("DD/MM/YY hh:mm")}}</span>
+                </td>
+                <td class="text-xs-left">
+                  <span v-if="props.item.orderDate">{{new Date(props.item.orderDate) | moment("DD/MM/YY")}}</span>
+                </td>
+                <td class="text-xs-right">
+                  <v-btn fab small dark color="green" :to="{name: 'editOrder', params: {id: props.item.id}}">
+                    <v-icon dark>edit</v-icon>
+                  </v-btn>
+                  <v-btn fab dark small color="red"  @click.native.stop="confirmDelete(props.item.id)">
+                      <v-icon dark>delete</v-icon>
+                  </v-btn>
+                </td>
+          </template>
         </v-data-table>
       </v-card>
     </v-flex>
@@ -36,74 +36,80 @@
 
 
 <script>
-import ConfirmModal from '../ConfirmModal'
+import ConfirmModal from "../ConfirmModal";
 export default {
-  name: 'ordersList',
+  name: "ordersList",
   created() {
-    this.$store.dispatch('loadOrders')
+    this.$store.dispatch("loadOrders");
   },
   data: function() {
     return {
       selected: {},
       deleteMode: false,
-      headers: [{
-          align: 'left',
-          value: 'name',
-          text: 'שם הלקוח'
+      headers: [
+        {
+          align: "left",
+          value: "name",
+          text: "שם הלקוח"
         },
         {
-          align: 'left',
-          value: 'createdAt',
-          text: 'תאריך יצירת ההזמנה'
+          align: "left",
+          value: "createdAt",
+          text: "תאריך יצירת ההזמנה"
         },
-         {
-          align: 'left',
-          value: 'orderDate',
-          text: 'תאריך משלוח'
+        {
+          align: "left",
+          value: "orderDate",
+          text: "תאריך משלוח"
         },
         {
           sortable: false,
-          value: 'action'
+          value: "action"
         }
       ]
-    }
+    };
   },
   computed: {
     orders() {
-      let items = this.$store.getters.orders || []
-        items = this.$store.getters.orders.map(item => {
-          return {
-            name: item.client.name,
-            createdAt: new Date(item.client.createdAt),
-            orderDate: item.client.orderDate,
-            id: item.id
-          }
-        })
-      return items
+      let items = this.$store.getters.orders || [];
+      var result = [];
+
+      items.forEach(item => {
+        item.orders.forEach(order => {
+          result.push({
+            id: item.id,
+            createdAt: order.createdAt,
+            name: order.name,
+            orderDate: order.orderDate
+          });
+        });
+      });
+      return result;
     },
     message() {
       if (this.selected) {
-        return `Are you sure you want to delete <strong> ${this.selected.name}</strong>?`
+        return `Are you sure you want to delete <strong> ${this.selected
+          .name}</strong>?`;
       } else {
-        return '';
+        return "";
       }
-    },
+    }
   },
   methods: {
     confirmDelete(id) {
-      this.selected = this.orders.find((item) => item.id === id)
-      this.deleteMode = true
+      this.selected = this.orders.find(item => item.id === id);
+      this.deleteMode = true;
     },
     remove() {
-      this.$store.dispatch('deleteOrder', this.selected.id)
-      this.deleteMode = false
-      this.selected = null
+      this.$store.dispatch("deleteOrder", this.selected.id);
+      this.deleteMode = false;
+      this.selected = null;
     }
   },
   components: {
     ConfirmModal
   }
-}
+};
 </script>
 
 <style scoped>
