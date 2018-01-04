@@ -1,6 +1,6 @@
-import moment from 'moment'
+import NewListItem from './NewListItem.vue';
 export default {
-  name: 'blNewOrder',
+  name: 'blNewOrderList',
   props: {
     id: {
       required: true,
@@ -9,143 +9,127 @@ export default {
   },
   data: function() {
     return {
-      dateFormatted:null,
+      dateFormatted: null,
       showPicker: false,
       orderId: '',
       isChanged: false,
       selectedClientName: '',
-      client: {
-        orderDate: '',
-        name: '',
-        order: [{
-          hebName: '',
-          engName: '',
-          quantity: '',
-          thaiName: '',
-          size: ''
-        }]
-      }
-    }
+      orders: []
+    };
   },
   created() {
-    if (!this.clients.length){
-      this.$store.dispatch('loadClients')
+    if (!this.clients.length) {
+      this.$store.dispatch('loadClients');
     }
-    if (!this.plants.length){
-      this.$store.dispatch('loadPlants')
+    if (!this.plants.length) {
+      this.$store.dispatch('loadPlants');
     }
 
-    if (this.id !== 'new'){
+    if (this.id !== 'new') {
       this.$store.dispatch('getOrderById', this.id).then(response => {
-        if (response.val()){
-          this.client = response.val().client
-          this.orderId = this.id
-          this.onClientSelected(this.client.name)
+        if (response.val()) {
+          this.orders.push(...response.val().orders);
+          this.orderId = this.id;
         }
-      })
-    }
-  },
-  watch: {
-    client: {
-      handler(){
-        this.isChanged = true
-      },
-      deep:true
-    }
-  },
-  computed: {
-    clients() {
-      return this.$store.getters.clients
-    },
-    hebClients(){
-      return this.clients.map(item => item.hebName)
-    },
-    plants() {
-      return this.$store.getters.plants
-    },
-    hebPlants() {
-      return this.plants.map(item => item.plantNameHeb)
-    },
-    engPlants() {
-      return this.plants.map(item => item.plantNameEng)
-    }
-  },
-  methods: {
-    formatDate(date){
-      if (!date) {
-        return null
-      }
-
-      const [year, month, day] = date.split('-')
-      return `${day}/${month}/${year}`
-    },
-    onClientSelected(val){
-      const client = this.clients.find(item => item.hebName === val)
-      this.selectedClientName = client.engName
-      this.dateFormatted = this.formatDate(this.client.orderDate)
-    },
-    onHebNameSelected(selected) {
-      const plant = this.plants.find(item => item.plantNameHeb === selected.hebName)
-      selected.engName = plant.plantNameEng
-      selected.thaiName = plant.thailand
-      selected.size = plant.size
-    },
-    onEngNameSelected(selected) {
-      const plant = this.plants.find(item => item.plantNameEng === selected.engName)
-      selected.hebName = plant.plantNameHeb
-      selected.size = plant.size
-    },
-    add() {
-      this.client.order.push({
-        hebName: '',
-        engName: '',
-        quantity: '',
-        thaiName: '',
-        size: ''
-      })
-    },
-    save() {
-      if (!this.orderId){
-        this.$store.dispatch('createOrder', this.client).then((response) => {
-          this.isChanged = false
-          this.orderId = response
-        })
-      }
-      //update mode
-      else{
-        this.$store.dispatch('updateOrder', {data: this.client, id: this.orderId}).then(() => {
-          this.isChanged = false
-        })
-      }
-    },
-    print(){
-      window.print()
-    },
-    newOrder() {
-      let ok = false
-      if (this.isChanged){
-        ok = confirm('You have unsaved changes, if you continue they will be lost')
-      }
-      else {
-        ok = true
-      }
-      if (ok){
-        this.orderId = ''
-        this.isChanged = false
-        this.client = {
-          name: '',
-          order: [{
+      });
+    } else {
+      this.orders.push({
+        orderId: Date.now(),
+        orderDate: '',
+        name: '',
+        plants: [
+          {
             hebName: '',
             engName: '',
             quantity: '',
             thaiName: '',
             size: ''
-          }]
-        }
+          }
+        ]
+      });
+    }
+  },
+  watch: {
+    orders: {
+      handler() {
+        this.isChanged = true;
+      },
+      deep: true
+    }
+  },
+  computed: {
+    clients() {
+      return this.$store.getters.clients;
+    },
+    hebClients() {
+      return this.clients.map(item => item.hebName);
+    },
+    plants() {
+      return this.$store.getters.plants;
+    },
+    hebPlants() {
+      return this.plants.map(item => item.plantNameHeb);
+    },
+    engPlants() {
+      return this.plants.map(item => item.plantNameEng);
+    }
+  },
+  methods: {
+    formatDate(date) {
+      if (!date) {
+        return null;
+      }
+
+      const [year, month, day] = date.split('-');
+      return `${day}/${month}/${year}`;
+    },
+    removeOrder(client) {
+      this.orders = this.orders.filter(item => {
+        return item.orderId !== client.orderId;
+      });
+    },
+    save() {
+      if (!this.orderId) {
+        this.$store.dispatch('createOrder', this.orders).then(response => {
+          this.isChanged = false;
+          this.orderId = response;
+        });
+      } else {
+        //update mode
+        this.$store
+          .dispatch('updateOrder', { data: this.orders, id: this.orderId })
+          .then(() => {
+            this.isChanged = false;
+          });
       }
     },
-    remove(removed) {
-      this.client.order = this.client.order.filter(item => item !== removed)
+    print() {
+      //set body height
+      const body = document.body;
+      body.style.height = body.scrollHeight + 'px';
+      console.log('height', body.style.height);
+
+      window.print();
+    },
+    newOrder() {
+      this.orderId = '';
+      this.isChanged = false;
+      this.orders.push({
+        orderId: Date.now(),
+        name: '',
+        plants: [
+          {
+            hebName: '',
+            engName: '',
+            quantity: '',
+            thaiName: '',
+            size: ''
+          }
+        ]
+      });
     }
+  },
+  components: {
+    NewListItem
   }
-}
+};
