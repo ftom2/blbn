@@ -36,11 +36,11 @@
 
 
 <script>
-import ConfirmModal from "../ConfirmModal";
+import ConfirmModal from '../ConfirmModal'
 export default {
-  name: "ordersList",
+  name: 'ordersList',
   created() {
-    this.$store.dispatch("loadOrders");
+    this.$store.dispatch('loadOrders')
   },
   data: function() {
     return {
@@ -48,31 +48,31 @@ export default {
       deleteMode: false,
       headers: [
         {
-          align: "left",
-          value: "name",
-          text: "שם הלקוח"
+          align: 'left',
+          value: 'name',
+          text: 'שם הלקוח'
         },
         {
-          align: "left",
-          value: "createdAt",
-          text: "תאריך יצירת ההזמנה"
+          align: 'left',
+          value: 'createdAt',
+          text: 'תאריך יצירת ההזמנה'
         },
         {
-          align: "left",
-          value: "orderDate",
-          text: "תאריך משלוח"
+          align: 'left',
+          value: 'orderDate',
+          text: 'תאריך משלוח'
         },
         {
           sortable: false,
-          value: "action"
+          value: 'action'
         }
       ]
-    };
+    }
   },
   computed: {
     orders() {
-      let items = this.$store.getters.orders || [];
-      var result = [];
+      let items = this.$store.getters.orders || []
+      var result = []
 
       items.forEach(item => {
         item.orders.forEach(order => {
@@ -81,35 +81,35 @@ export default {
             createdAt: order.createdAt,
             name: order.name,
             orderDate: order.orderDate
-          });
-        });
-      });
-      return result;
+          })
+        })
+      })
+      return result
     },
     message() {
       if (this.selected) {
         return `Are you sure you want to delete <strong> ${this.selected
-          .name}</strong>?`;
+          .name}</strong>?`
       } else {
-        return "";
+        return ''
       }
     }
   },
   methods: {
     confirmDelete(id) {
-      this.selected = this.orders.find(item => item.id === id);
-      this.deleteMode = true;
+      this.selected = this.orders.find(item => item.id === id)
+      this.deleteMode = true
     },
     remove() {
-      this.$store.dispatch("deleteOrder", this.selected.id);
-      this.deleteMode = false;
-      this.selected = null;
+      this.$store.dispatch('deleteOrder', this.selected.id)
+      this.deleteMode = false
+      this.selected = null
     }
   },
   components: {
     ConfirmModal
   }
-};
+}
 </script>
 
 <style scoped>

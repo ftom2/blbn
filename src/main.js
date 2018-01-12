@@ -1,23 +1,23 @@
 // The Vue build version to load with the `import` command
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
-import Vue from 'vue';
-import App from './App';
-import router from './router';
-import { initializeApp, auth } from 'firebase';
-import store from '@/store/store';
-import Vuetify from 'vuetify';
-import VueMoment from 'vue-moment';
-import('vuetify/dist/vuetify.min.css');
+import Vue from 'vue'
+import App from './App'
+import router from './router'
+import { initializeApp, auth } from 'firebase'
+import store from '@/store/store'
+import Vuetify from 'vuetify'
+import VueMoment from 'vue-moment'
+import('vuetify/dist/vuetify.min.css')
 
-Vue.use(Vuetify);
-Vue.use(VueMoment);
+Vue.use(Vuetify)
+Vue.use(VueMoment)
 
-Vue.config.productionTip = false;
+Vue.config.productionTip = false
 
 /*eslint-disable no-undef */
-const isDev = process.env.NODE_ENV === 'development';
+const isDev = process.env.NODE_ENV === 'development'
 /* eslint-disable no-console */
-console.info('Running in ' + (isDev ? 'dev mode' : 'prod mode'));
+console.info('Running in ' + (isDev ? 'dev mode' : 'prod mode'))
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
@@ -44,16 +44,16 @@ new Vue({
           projectId: 'balaban-30080',
           storageBucket: 'balaban-30080.appspot.com',
           messagingSenderId: '230607839888'
-        };
+        }
 
-    initializeApp(config);
+    initializeApp(config)
     auth().onAuthStateChanged(user => {
       if (user) {
-        this.$store.dispatch('autoSignin', user);
+        this.$store.dispatch('autoSignin', user)
       } else {
-        this.$store.dispatch('logout', null);
-        this.$router.replace({ name: 'login' });
+        this.$store.dispatch('logout', null)
+        this.$router.replace({ name: 'login' })
       }
-    });
+    })
   }
-});
+})

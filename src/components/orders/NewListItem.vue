@@ -75,7 +75,7 @@
 
 <script>
 export default {
-  name: "blNewOrderListItem",
+  name: 'blNewOrderListItem',
   props: {
     client: {
       required: true,
@@ -92,81 +92,81 @@ export default {
   },
   computed: {
     hebClients() {
-      return this.clients.map(item => item.hebName);
+      return this.clients.map(item => item.hebName)
     },
     hebPlants() {
-      return this.plants.map(item => item.plantNameHeb);
+      return this.plants.map(item => item.plantNameHeb)
     },
     engPlants() {
-      return this.plants.map(item => item.plantNameEng);
+      return this.plants.map(item => item.plantNameEng)
     }
   },
   created() {
     if (this.client && this.client.name) {
-      this.onClientSelected(this.client.name);
+      this.onClientSelected(this.client.name)
     }
   },
   data() {
     return {
       showPicker: false,
       dateFormatted: null,
-      selectedClientName: "",
+      selectedClientName: '',
       availableSizes: [
-        "1L",
-        "4L",
-        "P.12",
-        "P.17",
-        "10L",
-        "20L",
-        "25L",
-        "50L",
-        "100L"
+        '1L',
+        '4L',
+        'P.12',
+        'P.17',
+        '10L',
+        '20L',
+        '25L',
+        '50L',
+        '100L'
       ]
-    };
+    }
   },
   methods: {
     formatDate(date) {
       if (!date) {
-        return null;
+        return null
       }
 
-      const [year, month, day] = date.split("-");
-      return `${day}/${month}/${year}`;
+      const [year, month, day] = date.split('-')
+      return `${day}/${month}/${year}`
     },
     onHebNameSelected(selected) {
       const plant = this.plants.find(
         item => item.plantNameHeb === selected.hebName
-      );
-      selected.engName = plant.plantNameEng;
-      selected.thaiName = plant.thailand;
+      )
+      selected.engName = plant.plantNameEng
+      selected.thaiName = plant.thailand
     },
     onEngNameSelected(selected) {
       const plant = this.plants.find(
         item => item.plantNameEng === selected.engName
-      );
-      selected.hebName = plant.plantNameHeb;
+      )
+      selected.hebName = plant.plantNameHeb
     },
     onClientSelected(val) {
-      const client = this.clients.find(item => item.hebName === val);
+      const client = this.clients.find(item => item.hebName === val)
       if (client) {
-        this.selectedClientName = client.engName;
-        this.dateFormatted = this.formatDate(this.client.orderDate);
+        this.selectedClientName = client.engName
+        this.dateFormatted = this.formatDate(this.client.orderDate)
       }
     },
     add() {
       this.client.plants.push({
-        hebName: "",
-        engName: "",
-        quantity: "",
-        thaiName: "",
-        size: ""
-      });
+        hebName: '',
+        engName: '',
+        quantity: '',
+        thaiName: '',
+        size: ''
+      })
     },
     remove(removed) {
-      this.client.plants = this.client.plants.filter(item => item !== removed);
+      this.client.plants = this.client.plants.filter(item => item !== removed)
     }
   }
-};
+}
 </script>
 
 <style scoped>

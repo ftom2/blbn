@@ -1,4 +1,5 @@
-import NewListItem from './NewListItem.vue';
+import NewListItem from './NewListItem.vue'
+import Order from '@/models/OrderModel'
 export default {
   name: 'blNewOrderList',
   props: {
@@ -15,122 +16,96 @@ export default {
       isChanged: false,
       selectedClientName: '',
       orders: []
-    };
+    }
   },
   created() {
     if (!this.clients.length) {
-      this.$store.dispatch('loadClients');
+      this.$store.dispatch('loadClients')
     }
     if (!this.plants.length) {
-      this.$store.dispatch('loadPlants');
+      this.$store.dispatch('loadPlants')
     }
 
     if (this.id !== 'new') {
       this.$store.dispatch('getOrderById', this.id).then(response => {
         if (response.val()) {
-          this.orders.push(...response.val().orders);
-          this.orderId = this.id;
+          this.orders.push(...response.val().orders)
+          this.orderId = this.id
         }
-      });
+      })
     } else {
-      this.orders.push({
-        orderId: Date.now(),
-        orderDate: '',
-        name: '',
-        plants: [
-          {
-            hebName: '',
-            engName: '',
-            quantity: '',
-            thaiName: '',
-            size: ''
-          }
-        ]
-      });
+      this.orders.push(new Order())
     }
   },
   watch: {
     orders: {
       handler() {
-        this.isChanged = true;
+        this.isChanged = true
       },
       deep: true
     }
   },
   computed: {
     clients() {
-      return this.$store.getters.clients;
+      return this.$store.getters.clients
     },
     hebClients() {
-      return this.clients.map(item => item.hebName);
+      return this.clients.map(item => item.hebName)
     },
     plants() {
-      return this.$store.getters.plants;
+      return this.$store.getters.plants
     },
     hebPlants() {
-      return this.plants.map(item => item.plantNameHeb);
+      return this.plants.map(item => item.plantNameHeb)
     },
     engPlants() {
-      return this.plants.map(item => item.plantNameEng);
+      return this.plants.map(item => item.plantNameEng)
     }
   },
   methods: {
     formatDate(date) {
       if (!date) {
-        return null;
+        return null
       }
 
-      const [year, month, day] = date.split('-');
-      return `${day}/${month}/${year}`;
+      const [year, month, day] = date.split('-')
+      return `${day}/${month}/${year}`
     },
     removeOrder(client) {
       this.orders = this.orders.filter(item => {
-        return item.orderId !== client.orderId;
-      });
+        return item.orderId !== client.orderId
+      })
     },
     save() {
       if (!this.orderId) {
         this.$store.dispatch('createOrder', this.orders).then(response => {
-          this.isChanged = false;
-          this.orderId = response;
-        });
+          this.isChanged = false
+          this.orderId = response
+        })
       } else {
         //update mode
         this.$store
           .dispatch('updateOrder', { data: this.orders, id: this.orderId })
           .then(() => {
-            this.isChanged = false;
-          });
+            this.isChanged = false
+          })
       }
     },
     print() {
       //set body height
-      const el = document.getElementById('scrollTarget'),
-        body = document.body;
-      body.style.height = el.scrollHeight + 'px';
-      console.log('height', body.style.height);
+      // const el = document.getElementById('scrollTarget'),
+      //   body = document.body
+      // body.style.height = el.scrollHeight + 'px'
 
-      window.print();
+      window.print()
     },
     newOrder() {
-      this.orderId = '';
-      this.isChanged = false;
-      this.orders.push({
-        orderId: Date.now(),
-        name: '',
-        plants: [
-          {
-            hebName: '',
-            engName: '',
-            quantity: '',
-            thaiName: '',
-            size: ''
-          }
-        ]
-      });
+      this.orderId = ''
+      this.isChanged = false
+      this.orders.push(new Order())
     }
   },
   components: {
     NewListItem
   }
-};
+}
